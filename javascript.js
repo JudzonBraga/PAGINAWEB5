@@ -542,15 +542,30 @@
             cvsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // ===== FORMATEAR TELÉFONO =====
-        function formatPhone(phone) {
-            if (!phone || phone === '') return 'No especificado';
-            const digits = phone.replace(/\D/g, '');
-            if (digits.length === 11) {
-                return digits.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2 $3');
-            }
-            return phone;
-        }
+       // ===== FORMATEAR TELÉFONO (FORMATO INTERNACIONAL) =====
+function formatPhone(phone) {
+    if (!phone || phone === '') return 'No especificado';
+    
+    // Eliminar cualquier caracter que no sea número
+    const digits = phone.replace(/\D/g, '');
+    
+    // Para 11 dígitos (ej: 51945678901)
+    if (digits.length === 11) {
+        // Extraer los 9 dígitos después del código de país
+        // Asumiendo que los primeros 2 dígitos son el código de país (51)
+        const codigoPais = digits.substring(0, 2); // "51"
+        const numero = digits.substring(2); // "945678901"
+        
+        // Formatear los 9 dígitos como: 945 678 901
+        const numeroFormateado = numero.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+        
+        // Retornar con + y espacios
+        return `+${codigoPais} ${numeroFormateado}`; // +51 945 678 901
+    }
+    
+    // Si no son 11 dígitos, devolver los dígitos sin formato
+    return digits;
+}
 
         // ===== ABRIR MODAL =====
         function openModal(id) {
